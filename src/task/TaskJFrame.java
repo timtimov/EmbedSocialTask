@@ -1,7 +1,6 @@
 package task;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,8 +26,8 @@ public class TaskJFrame extends javax.swing.JFrame {
     
     private void filter() {
         
-        try (BufferedReader br = new BufferedReader(new FileReader("reviews.json"))){
-            JSONTokener tk = new JSONTokener(br);
+        try (InputStream stream = TaskJFrame.class.getResourceAsStream("/task/resources/reviews.json")){
+            JSONTokener tk = new JSONTokener(stream);
             JSONArray allReviews = new JSONArray(tk);
    
             List<JSONObject> filtList = new ArrayList<>();
