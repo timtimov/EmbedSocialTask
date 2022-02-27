@@ -3,7 +3,10 @@ package task;
 import java.awt.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -29,7 +32,7 @@ public class TaskJFrame extends javax.swing.JFrame {
    
             java.util.List<JSONObject> filtList = new ArrayList<>();
             filterMinRating(filtList, allReviews);
-            JSONArray filtReviews = new JSONArray(filtList);
+            
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -42,6 +45,35 @@ public class TaskJFrame extends javax.swing.JFrame {
                 filtList.add((JSONObject)obj);
             }
         }
+    }
+    
+    static class dateComp implements Comparator<JSONObject>{
+
+        @Override
+        public int compare(JSONObject o1, JSONObject o2) {
+            LocalDateTime ldt1 = LocalDateTime.parse(o1.getString("reviewCreatedOnDate"), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            LocalDateTime ldt2 = LocalDateTime.parse(o2.getString("reviewCreatedOnDate"), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            return ldt2.compareTo(ldt1);
+        }
+        
+    }
+    
+    static class ratingComp implements Comparator<JSONObject>{
+
+        @Override
+        public int compare(JSONObject o1, JSONObject o2) {
+            return o2.getInt("rating") - o1.getInt("rating");
+        }
+        
+    }
+    
+    static class textComp implements Comparator<JSONObject>{
+
+        @Override
+        public int compare(JSONObject o1, JSONObject o2) {
+            return o2.getString("reviewText").length() - o1.getString("reviewText").length();
+        }
+        
     }
     
     /**
