@@ -1,5 +1,13 @@
 package task;
 
+import java.awt.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 /**
  *
  * @author Eftim
@@ -12,7 +20,30 @@ public class TaskJFrame extends javax.swing.JFrame {
     public TaskJFrame() {
         initComponents();
     }
-
+    
+    private void filter() {
+        
+        try (BufferedReader br = new BufferedReader(new FileReader("reviews.json"))){
+            JSONTokener tk = new JSONTokener(br);
+            JSONArray allReviews = new JSONArray(tk);
+   
+            java.util.List<JSONObject> filtList = new ArrayList<>();
+            filterMinRating(filtList, allReviews);
+            JSONArray filtReviews = new JSONArray(filtList);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+    
+    private void filterMinRating(java.util.List<JSONObject> filtList, JSONArray allReviews) {
+        int minRating = Integer.parseInt((String)jComboBox2.getSelectedItem());
+        for (Object obj : allReviews) {
+            if(((JSONObject)obj).getInt("rating") >= minRating){
+                filtList.add((JSONObject)obj);
+            }
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -57,6 +88,11 @@ public class TaskJFrame extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(0, 102, 255));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Filter");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -107,6 +143,10 @@ public class TaskJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       filter();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -154,4 +194,5 @@ public class TaskJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     // End of variables declaration//GEN-END:variables
+    
 }
