@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +33,12 @@ public class TaskJFrame extends javax.swing.JFrame {
    
             java.util.List<JSONObject> filtList = new ArrayList<>();
             filterMinRating(filtList, allReviews);
-            
+            dateOrder(filtList);
+            ratingOrder(filtList);
+            textOrder(filtList);
+            for (JSONObject jSONObject : filtList) {
+                System.out.println(jSONObject.toString());
+            }
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -44,6 +50,31 @@ public class TaskJFrame extends javax.swing.JFrame {
             if(((JSONObject)obj).getInt("rating") >= minRating){
                 filtList.add((JSONObject)obj);
             }
+        }
+    }
+
+    private void dateOrder(java.util.List<JSONObject> filtList) {
+        String dateOrderStyle = (String)jComboBox3.getSelectedItem();
+        if(dateOrderStyle.equals("Newest First")){
+            Collections.sort(filtList, new dateComp());
+        }else{
+            Collections.sort(filtList, new dateComp().reversed());
+        }
+    }
+
+    private void ratingOrder(java.util.List<JSONObject> filtList) {
+        String ratingOrderStyle = (String)jComboBox1.getSelectedItem();
+        if(ratingOrderStyle.equals("Highest First")){
+            Collections.sort(filtList, new ratingComp());
+        }else{
+            Collections.sort(filtList, new ratingComp().reversed());
+        }
+    }
+
+    private void textOrder(java.util.List<JSONObject> filtList) {
+        String textOrderStyle = (String)jComboBox4.getSelectedItem();
+        if(textOrderStyle.equals("Yes")){
+            Collections.sort(filtList, new textComp());
         }
     }
     
