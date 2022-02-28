@@ -1,15 +1,5 @@
 package task;
 
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  *
@@ -20,93 +10,10 @@ public class TaskJFrame extends javax.swing.JFrame {
     /**
      * Creates new form TaskJFrame
      */
+    Filter filt;
     public TaskJFrame() {
         initComponents();
-    }
-    
-    private void filter() {
-        
-        try (InputStream stream = TaskJFrame.class.getResourceAsStream("/task/resources/reviews.json")){
-            JSONTokener tk = new JSONTokener(stream);
-            JSONArray allReviews = new JSONArray(tk);
-   
-            List<JSONObject> filtList = new ArrayList<>();
-            filterMinRating(filtList, allReviews);
-            dateOrder(filtList);
-            ratingOrder(filtList);
-            textOrder(filtList);
-            
-            StringBuilder sb = new StringBuilder();
-            for (JSONObject obj : filtList) {
-                sb.append(obj.toString(5)).append("\n");
-            }
-            jTextArea1.setText(sb.toString());
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-    }
-    
-    private void filterMinRating(java.util.List<JSONObject> filtList, JSONArray allReviews) {
-        int minRating = Integer.parseInt((String)jComboBox2.getSelectedItem());
-        for (Object obj : allReviews) {
-            if(((JSONObject)obj).getInt("rating") >= minRating){
-                filtList.add((JSONObject)obj);
-            }
-        }
-    }
-
-    private void dateOrder(java.util.List<JSONObject> filtList) {
-        String dateOrderStyle = (String)jComboBox3.getSelectedItem();
-        if(dateOrderStyle.equals("Newest First")){
-            Collections.sort(filtList, new dateComp());
-        }else{
-            Collections.sort(filtList, new dateComp().reversed());
-        }
-    }
-
-    private void ratingOrder(java.util.List<JSONObject> filtList) {
-        String ratingOrderStyle = (String)jComboBox1.getSelectedItem();
-        if(ratingOrderStyle.equals("Highest First")){
-            Collections.sort(filtList, new ratingComp());
-        }else{
-            Collections.sort(filtList, new ratingComp().reversed());
-        }
-    }
-
-    private void textOrder(java.util.List<JSONObject> filtList) {
-        String textOrderStyle = (String)jComboBox4.getSelectedItem();
-        if(textOrderStyle.equals("Yes")){
-            Collections.sort(filtList, new textComp());
-        }
-    }
-    
-    static class dateComp implements Comparator<JSONObject>{
-
-        @Override
-        public int compare(JSONObject o1, JSONObject o2) {
-            LocalDateTime ldt1 = LocalDateTime.parse(o1.getString("reviewCreatedOnDate"), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-            LocalDateTime ldt2 = LocalDateTime.parse(o2.getString("reviewCreatedOnDate"), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-            return ldt2.compareTo(ldt1);
-        }
-        
-    }
-    
-    static class ratingComp implements Comparator<JSONObject>{
-
-        @Override
-        public int compare(JSONObject o1, JSONObject o2) {
-            return o2.getInt("rating") - o1.getInt("rating");
-        }
-        
-    }
-    
-    static class textComp implements Comparator<JSONObject>{
-
-        @Override
-        public int compare(JSONObject o1, JSONObject o2) {
-            return o2.getString("reviewText").length() - o1.getString("reviewText").length();
-        }
-        
+        filt = new Filter();
     }
     
     /**
@@ -220,7 +127,12 @@ public class TaskJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       filter();
+        filt.filterMinRating((String)jComboBox2.getSelectedItem());
+        filt.dateOrder((String)jComboBox3.getSelectedItem());
+        filt.ratingOrder((String)jComboBox1.getSelectedItem());
+        filt.textOrder((String)jComboBox4.getSelectedItem());
+        filt.textShown();
+        jTextArea1.setText(filt.sb.toString());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
