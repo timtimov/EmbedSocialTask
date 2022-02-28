@@ -16,11 +16,20 @@ import org.json.JSONTokener;
  * @author Eftim
  */
 public class Filter {
-        StringBuilder sb;
-        List<JSONObject> filtList;
-        JSONTokener tk;
-        JSONArray allReviews;
         
+        private JSONTokener tk;
+        private JSONArray allReviews;
+        private List<JSONObject> filtList;
+        private StringBuilder sb;
+
+    public List<JSONObject> getFiltList() {
+        return filtList;
+    }
+
+    public StringBuilder getSb() {
+        return sb;
+    }
+    
     public Filter(){
         
         try (InputStream stream = TaskJFrame.class.getResourceAsStream("/task/resources/reviews.json")){

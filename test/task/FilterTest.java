@@ -42,7 +42,7 @@ public class FilterTest {
     @Test
     public void testFilterMinRating() {
         instance.filterMinRating("5");
-        assertEquals(instance.filtList.size(), 4);
+        assertEquals(instance.getFiltList().size(), 4);
     }
 
     /**
@@ -52,7 +52,7 @@ public class FilterTest {
     public void testDateOrder() {
         instance.filterMinRating("5");
         instance.dateOrder("Newest First");
-        assertEquals(instance.filtList.get(0).getString("reviewCreatedOnDate"), "2021-01-25T13:00:35+00:00");
+        assertEquals(instance.getFiltList().get(0).getString("reviewCreatedOnDate"), "2021-01-25T13:00:35+00:00");
         
     }
 
@@ -63,7 +63,7 @@ public class FilterTest {
     public void testRatingOrder() {
         instance.filterMinRating("3");
         instance.ratingOrder("Lowest First");
-        assertEquals(instance.filtList.get(0).getInt("rating"), 3);
+        assertEquals(instance.getFiltList().get(0).getInt("rating"), 3);
     }
 
     /**
@@ -73,8 +73,8 @@ public class FilterTest {
     public void testTextOrder() {
         instance.filterMinRating("3");
         instance.textOrder("Yes");
-        int lastElemPos = instance.filtList.size() - 1;
-        assertEquals(instance.filtList.get(lastElemPos).getString("reviewText"), "");
+        int lastElemPos = instance.getFiltList().size() - 1;
+        assertEquals(instance.getFiltList().get(lastElemPos).getString("reviewText"), "");
     }
 
     /**
@@ -87,11 +87,11 @@ public class FilterTest {
         instance.ratingOrder("Highest First");
         instance.textOrder("Yes");
         StringBuilder sb = new StringBuilder();
-        for (JSONObject obj : instance.filtList) {
+        for (JSONObject obj : instance.getFiltList()) {
             sb.append(obj.toString(5)).append("\n");
         }
         instance.textShown();
-        assertEquals(instance.sb.toString(), sb.toString());
+        assertEquals(instance.getSb().toString(), sb.toString());
     }
     
 }

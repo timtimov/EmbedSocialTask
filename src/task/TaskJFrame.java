@@ -132,7 +132,7 @@ public class TaskJFrame extends javax.swing.JFrame {
         filt.ratingOrder((String)jComboBox1.getSelectedItem());
         filt.textOrder((String)jComboBox4.getSelectedItem());
         filt.textShown();
-        jTextArea1.setText(filt.sb.toString());
+        jTextArea1.setText(filt.getSb().toString());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
